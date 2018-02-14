@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router"; //new
 
 import { PeopleService } from "../people.service";
@@ -6,23 +6,13 @@ import { Person } from "../person";
 
 @Component({
   selector: 'app-person-details',
-  template: `
-  <section *ngIf="person">
-    <h2>You selected:  {{person.name}}</h2>
-    <h3>Description</h3>
-    <p>
-       {{person.name}} weights {{person.weight}} and is {{person.height}} tall.
-    </p>
-  </section>
-
-  <!-- NAV Button-->
-  <button (click)="gotoPeopleList()">BAck to peoples list</button>
-  `,
+  templateUrl: './person-details.component.html', //<===HERE!
   styles: []
 })
-export class PersonDetailsComponent implements OnInit, OnDestroy {
+export class PersonDetailsComponent implements OnInit {
   person: Person;
   sub:any; //new
+  professions: string[] = ['jedi', 'bounty hunter', 'princess', 'sith lord'];
 
   constructor(private route:ActivatedRoute,
               private peopleService:PeopleService,
@@ -42,6 +32,10 @@ export class PersonDetailsComponent implements OnInit, OnDestroy {
   gotoPeopleList(){
     let link = ['/persons'];
     this.router.navigate(link);
+  }
+
+  savePersonDetails(){
+    this.peopleService.save(this.person);
   }
 }
 
