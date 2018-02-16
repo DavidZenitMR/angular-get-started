@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router"; //new
 
 import { PeopleService } from "../people.service";
@@ -9,7 +9,7 @@ import { Person } from "../person";
   templateUrl: './person-details.component.html', //<===HERE!
   styles: []
 })
-export class PersonDetailsComponent implements OnInit {
+export class PersonDetailsComponent implements OnInit, OnDestroy {
   person: Person;
   sub:any; //new
   professions: string[] = ['jedi', 'bounty hunter', 'princess', 'sith lord'];
@@ -21,7 +21,10 @@ export class PersonDetailsComponent implements OnInit {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       let id = Number.parseInt(params['id']);
-      this.person = this.peopleService.get(id);
+      console.log('getting person with id: ', id);
+      this.peopleService
+        .get(id)
+        .subscribe(p => this.person = p);
     });
   }
 
@@ -35,7 +38,9 @@ export class PersonDetailsComponent implements OnInit {
   }
 
   savePersonDetails(){
-    this.peopleService.save(this.person);
+    this.peopleService
+    .save(this.person)
+    .subscribe(r => console.log(`saved!!! ${JSON.stringify(this.person)}`));
   }
 }
 
